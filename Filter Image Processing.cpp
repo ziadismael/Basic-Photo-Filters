@@ -20,6 +20,7 @@ unsigned char image[SIZE][SIZE]; // => "SIZE" is defined to be a constant int = 
 void saveImage();
 void loadImage();
 void filterBlacknWhite();
+void resizeFlip(); // <= added in this commit 
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -51,5 +52,39 @@ void filterBlacknWhite(){
             else
                 image[i][j] = 255; // turning any pixel > 127 into white 
         }
+    }
+}
+
+void resizeFlip(){
+    char selector;
+    char image_copy[SIZE][SIZE];
+    cout<<"Flip (h)orizontally or (v)ertically? ";
+    cin>>selector;
+    for(size_t i=0; i<SIZE; i++){
+        for(size_t j=0; j<SIZE; j++){
+            image_copy[i][j] = image[i][j]; //making a copy of the 2D array
+        }
+    }
+    if (selector=='h'){
+        for(size_t i=0; i<SIZE/2; i++){ // we only need to go to half of the array cuz if we continue it will revert the flip
+            for(size_t j=0; j<SIZE; j++){
+                int temp = image[i][j];                //  <=
+                image[i][j] = image_copy[SIZE-1-i][j]; //  <=  this three lines of code responsible for swapping pixels
+                image[SIZE-i-1][j] = temp;             //  <=
+            }
+        }
+    }
+    else if(selector=='v'){
+        for(size_t i=0; i<SIZE; i++){
+            for(size_t j=0; j<SIZE/2; j++){
+                int temp = image[i][j];
+                image[i][j] = image_copy[i][SIZE-1-j];
+                image[i][SIZE-j-1] = temp;
+            }
+        }
+    }
+    else{
+        cout<<"invalid choice. Type (h) to flip horizontally and (v) to flip vertically."<<endl;
+        resizeFlip();  // Handling errors
     }
 }
