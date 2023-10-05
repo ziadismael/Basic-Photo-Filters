@@ -21,7 +21,8 @@ void saveImage();
 void loadImage();
 void filterBlacknWhite();
 void resizeFlip(); 
-void mergeImages(); // <= added in this commit
+void mergeImages();
+void filterInvert(); //  <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -106,4 +107,11 @@ void mergeImages(){
         image[i][j] = (image[i][j] + second_image[i][j])/2 ;  
   }
   
+}
+void filterInvert(){
+    for (size_t i=0;i<SIZE;i++){
+        for (size_t j=0;j<SIZE;j++){
+            image[i][j]=255-image[i][j];
+        }
+    }
 }
