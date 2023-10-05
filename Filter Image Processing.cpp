@@ -20,7 +20,8 @@ unsigned char image[SIZE][SIZE]; // => "SIZE" is defined to be a constant int = 
 void saveImage();
 void loadImage();
 void filterBlacknWhite();
-void resizeFlip(); // <= added in this commit 
+void resizeFlip(); 
+void mergeImages(); // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -87,4 +88,22 @@ void resizeFlip(){
         cout<<"invalid choice. Type (h) to flip horizontally and (v) to flip vertically."<<endl;
         resizeFlip();  // Handling errors
     }
+}
+void mergeImages(){
+  //declaring and intializing the name and the array of the second image
+  char second_image_name[100];
+  unsigned char second_image [SIZE][SIZE];
+
+  cout << "Enter the name of the other image you need to merge : "  ;
+  cin >> second_image_name ;
+  
+  strcat (second_image_name, ".bmp"); //making sure its the correct format 
+  readGSBMP(second_image_name, second_image); //loading the second image into the second 2D array
+
+  for (size_t i = 0; i < SIZE; i++) //nested loop for merging the two images by taking the average of each pixel
+  {
+      for (size_t j = 0; j < SIZE; j++)
+        image[i][j] = (image[i][j] + second_image[i][j])/2 ;  
+  }
+  
 }
