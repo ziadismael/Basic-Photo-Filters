@@ -22,7 +22,8 @@ void loadImage();
 void filterBlacknWhite();
 void resizeFlip(); 
 void mergeImages();
-void filterInvert(); //  <= added in this commit
+void filterInvert(); 
+void darklightImage(); //  <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -114,4 +115,29 @@ void filterInvert(){
             image[i][j]=255-image[i][j];
         }
     }
+}
+
+void darklightImage(){ //responsible for lighten or darken by 50 %
+  // taking the choice from the user either to darken or lighten
+  int choice;
+  cout << "Choose what you need from the following list :" << endl;
+  cout << "1-Darken" << endl << "2-Lighten" << endl;
+  cin >> choice;
+
+  for (size_t i = 0; i < SIZE; i++) // nested loop for increasing or decreasing the brightness by 50 %
+  {
+    for (size_t j = 0; j < SIZE; j++)
+    {
+        if (choice == 1)
+        {
+          if((image[i][j] +(image[i][j] * 0.5) )<=0) image[i][j] = 0;
+          else image[i][j] = image[i][j] - (image[i][j] ) * 0.5 ;
+        }
+        else
+        {
+          if((image[i][j] +(image[i][j] * 0.5) )>=255) image[i][j] = 255;
+          else image[i][j] = image[i][j] +(image[i][j] ) * 0.5 ;
+        }
+    }
+  }
 }
