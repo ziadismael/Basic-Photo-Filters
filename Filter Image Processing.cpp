@@ -17,14 +17,15 @@ Purpose:
 using namespace std;
 unsigned char image[SIZE][SIZE]; // => "SIZE" is defined to be a constant int = 256 (# of pixels in row/col.)
 
-void menuSelect();  //  <= added in this commit
+void menuSelect();  
 void saveImage();
 void loadImage();
 void filterBlacknWhite();
 void resizeFlip(); 
 void mergeImages();
 void filterInvert(); 
-void darklightImage(); 
+void darklightImage();
+void resizeRotate();   //  <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -48,7 +49,7 @@ void menuSelect(){     //function responsible for handling the choice of the use
     } 
 
     while (selector != '0'){    // while loop to make sure the use able to choose what to do till he exit by typing 0
-        cout << "Please select a filter to apply or 0 to exit : " ; 
+        cout << "Please select a filter to apply , '0' to exit or 's' to save : " ; 
         cin >> selector ;
         switch (selector){ //Calling the functions by the input of the user
         case '1':
@@ -65,6 +66,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
             break;
         case '5':
             darklightImage();
+            break;
+        case '6':
+            resizeRotate();
             break;
         case 's':
             saveImage();
@@ -186,4 +190,43 @@ void darklightImage(){ //responsible for lighten or darken by 50 %
         }
     }
   }
+}
+void resizeRotate(){
+    int selection;
+    cout<<"Rotate (90) , (180) , (360) ?"<<endl;
+    cin>>selection;
+    if (selection == 360){
+        return; //returns the same photo
+    }
+    else if (selection == 90){
+        unsigned char rotatedImage[SIZE][SIZE]; //creating a new 2d array to store the new rotated image
+        for (size_t i=0;i<SIZE;i++){
+            for (size_t j=0;j<SIZE;j++){
+                rotatedImage[j][SIZE-1-i]=image[i][j];
+            }
+        }
+         for (size_t i=0;i<SIZE;i++){
+            for (size_t j=0;j<SIZE;j++){
+                image[i][j]=rotatedImage[i][j]; //storing the new values in the original image
+            }
+        }
+
+    }
+    else if (selection == 180){
+        char rotated_image[SIZE][SIZE]; //creating a new 2d array to store the new rotated image
+        for (int i=0;i<SIZE;i++){
+            for (int j=0;j<SIZE;j++){
+                rotated_image[SIZE-1-i][SIZE-1-j]=image[i][j]; 
+            }
+        }
+        for (int i=0;i<SIZE;i++){
+            for (int j=0;j<SIZE;j++){
+                image[i][j]=rotated_image[i][j];//storing the new values in the original image
+            }
+        }
+    }
+    else{
+        cout<<"Invalid Input!"<<endl;
+        resizeRotate(); //handling input errors
+    }
 }
