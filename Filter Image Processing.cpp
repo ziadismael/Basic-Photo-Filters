@@ -1,7 +1,7 @@
 /*
 FCAI – OOP Programming – 2023 - Assignment 1 
 Program: ImageFilterApplier.cpp
-Last Modification Date: 4/10/2023
+Last Modification Date: 6/10/2023
 Team Members:   1- Mohamed Mahmoud Khamis Rezk               (20221129)
                 2- Ibrahem Medhat Mahmoud Mohamed El Zennary (20221003)
                 3- Ziad Sherif Ahmed Mohamed Ismael          (20220143)
@@ -17,20 +17,64 @@ Purpose:
 using namespace std;
 unsigned char image[SIZE][SIZE]; // => "SIZE" is defined to be a constant int = 256 (# of pixels in row/col.)
 
+void menuSelect();  //  <= added in this commit
 void saveImage();
 void loadImage();
 void filterBlacknWhite();
 void resizeFlip(); 
 void mergeImages();
 void filterInvert(); 
-void darklightImage(); //  <= added in this commit
+void darklightImage(); 
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
     cout<<"Please enter file name of the image to process: ";
     loadImage();
-    // menu function here
+    menuSelect();
     return 0;
+}
+
+void menuSelect(){     //function responsible for handling the choice of the user till he exit    
+    char selector;  //The choice of the user 
+    string options[17]={"1-Black & White Filter","2-Invert Filter",
+                        "3-Merge Filter", "4-Flip Image", "5-Darken and Lighten Image",
+                        "6-Rotate Image","7-Detect image edges Filter","8-Enlarge Image",   
+                        "9-Shrink Image","a-Mirror 1/2 Image","b-Shuffle Image",            
+                        "c-Blur Image","d-Crop Image","e-Skew Image Right","f-Skew Image Up",
+                        "s-Save the image to a file","0-Exit"};// <= array saveing the filters to choose from
+    
+    for (size_t i = 0; i < 17; i++){    // printing the menu to the user by the array we made
+        cout << options[i] << endl;
+    } 
+
+    while (selector != '0'){    // while loop to make sure the use able to choose what to do till he exit by typing 0
+        cout << "Please select a filter to apply or 0 to exit : " ; 
+        cin >> selector ;
+        switch (selector){ //Calling the functions by the input of the user
+        case '1':
+            filterBlacknWhite();
+            break;
+        case '2':
+            filterInvert();
+            break;
+        case '3':
+            mergeImages();
+            break;
+        case '4':
+            resizeFlip();
+            break;
+        case '5':
+            darklightImage();
+            break;
+        case 's':
+            saveImage();
+            break;
+        case '0':
+           break;
+        default: // handling input errors
+            cout<<"Invalid Input or Filter not created yet" << endl;
+        }
+    }
 }
 
 void loadImage(){   //responsible for loading the image into 2D array
@@ -42,9 +86,11 @@ void loadImage(){   //responsible for loading the image into 2D array
 
 void saveImage(){   //responsible for saving the image from 2D array after applying filters
     char image_name[100];
+    cout << "Enter the name of the new image : " ;
     cin>>image_name;
     strcat (image_name, ".bmp");
     writeGSBMP(image_name, image); //function from the "mpblib" library to convert array to image
+    cout << "Done! Image has been saved as : " << image_name << endl;
 }
 
 void filterBlacknWhite(){ 
