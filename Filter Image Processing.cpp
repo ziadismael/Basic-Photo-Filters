@@ -218,7 +218,7 @@ void filterDarkenLighten(){ //responsible for lighten or darken by 50 %
 }
 void filterRotate(){
     string selector;
-    cout<<"Rotate (90) , (180) , (360) ?"<<endl;
+    cout<<"Rotate (90) , (180) , (270) ?"<<endl;
     while (true)
     {   
         cin>>selector;
@@ -255,6 +255,21 @@ void filterRotate(){
             }
             cout << "Filter has been applied." << endl;
             break;// make sure to exit from the while loop if the user entered valid input
+        }
+        else if (selector == "270"){
+            unsigned char image_rotated[SIZE][SIZE];
+            for (size_t i=0;i<SIZE;i++){
+                for (size_t j=0;j<SIZE;j++){
+                    image_rotated[SIZE-1-j][i] = image[i][j];
+                }
+            }
+            for (size_t i = 0; i < SIZE; i++) {
+                for (size_t j = 0; j < SIZE; j++) {
+                    image[i][j] = image_rotated[i][j]; // Storing the rotated values in the original image
+                }
+            }
+            cout<<"Filter Has Been Applied!"<<endl;
+            break; // make sure to exit from the while loop if the user entered valid input
         }
         else{
             cout<<"Invalid Input! Type '90' , '180' or '360' to apply the filter : "<<endl;
