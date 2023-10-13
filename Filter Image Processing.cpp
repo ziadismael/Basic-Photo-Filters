@@ -1,7 +1,7 @@
 /*
 FCAI – OOP Programming – 2023 - Assignment 1 
 Program: ImageFilterApplier.cpp
-Last Modification Date: 10/10/2023
+Last Modification Date: 13/10/2023
 Team Members:   1- Mohamed Mahmoud Khamis Rezk               (20221129)    mohamedkhamis20045@gmail.com
                 2- Ibrahem Medhat Mahmoud Mohamed El Zennary (20221003)    ibra.medhat@gmail.com
                 3- Ziad Sherif Ahmed Mohamed Ismael          (20220143)    ziad.ismael.studymail@gmail.com
@@ -26,6 +26,7 @@ void filterMerge();
 void filterInvert(); 
 void filterDarkenLighten();
 void filterRotate();
+void filterCrop(); // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -70,6 +71,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
                 break;
             case '6':
                 filterRotate();
+                break;
+            case 'd':
+                filterCrop();
                 break;
             case 's':
                 saveImage();
@@ -277,3 +281,26 @@ void filterRotate(){
     }
     
 }
+void filterCrop(){
+    int x{}, y{}, l{}, w{};
+    cout<<"Please enter x, y, l and w consececutivly: ";
+    cin>>x>>y>>l>>w; 
+    unsigned char image_cropped[SIZE][SIZE];
+    for(size_t i=0; i<SIZE; i++){
+        for(size_t j=0; j<SIZE; j++){
+            image_cropped[i][j]=255;
+        }
+    }   
+    for(size_t i=x; i<(x+l); i++){
+        for(size_t j=y; j<(y+w); j++){
+            image_cropped[i][j]=image[i][j];
+        }
+    }
+    for(size_t i=0; i<SIZE; i++){
+        for(size_t j=0; j<SIZE; j++){
+            image[i][j]=image_cropped[i][j];
+        }
+    }
+    cout<<"Filter has been applied."<<endl;
+}
+
