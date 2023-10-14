@@ -27,7 +27,8 @@ void filterInvert();
 void filterDarkenLighten();
 void filterRotate();
 void filterCrop(); 
-void filterShrink(); //  <= added in this commit
+void filterShrink();
+void filterMirror(); // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -76,6 +77,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
             case '9':
               filterShrink();
               break;
+            case 'a':
+                filterMirror();
+                break;
             case 'd':
                 filterCrop();
                 break;
@@ -353,4 +357,59 @@ void filterShrink(){
         }
     }
 }
-
+void filterMirror(){
+    string selector;
+    cout<<"Mirror (l)eft, (r)ight, (u)pper, (d)own side? ";
+    unsigned char image_mirrored[SIZE][SIZE];
+    unsigned char image_copy[SIZE][SIZE];
+    for(size_t i=0; i<SIZE; i++){
+        for(size_t j=0; j<SIZE; j++){
+            image_mirrored[i][j] = image[i][j]; 
+        }
+    }
+    while (true){ // for handling input errors
+        cin>>selector;
+        if (selector == "l"){
+            for(size_t i=0; i<SIZE; i++){
+                for(size_t j=(SIZE/2)-1; j<SIZE; j++){
+                    image_mirrored[i][j] = image_mirrored[i][SIZE-1-j];
+                }
+            }
+            break;
+        }
+        else if (selector == "r"){
+            for(size_t i=0; i<SIZE; i++){
+                for(size_t j = 0; j < (SIZE/2); j++){
+                    image_mirrored[i][j] = image_mirrored[i][SIZE-1-j];
+                }
+            }
+            break;
+        }
+        else if (selector == "u"){
+            for(size_t i= (SIZE / 2); i < SIZE; i++){
+                for(size_t j=0; j<SIZE; j++){
+                    image_mirrored[i][j] = image_mirrored[SIZE-1-i][j];
+                }
+            }
+            break;
+        }
+        else if (selector == "d"){
+            for(size_t i=0; i<(SIZE/2)-1; i++){
+                for(size_t j=0; j<SIZE; j++){
+                    image_mirrored[i][j] = image_mirrored[SIZE-1-i][j];
+                }
+            }
+            break;
+        }
+        else{
+            cout<<"Invalid input. Type (d) to mirror downside, (u) to mirror upperside, (l) to mirror leftside or (r) to mirror rightside."<<endl;;
+        }
+    }
+    //Uptading the original image
+    for (size_t i = 0; i < SIZE ; i++) {
+        for (size_t j = 0; j < SIZE; j++) {
+            image[i][j] = image_mirrored[i][j];
+        }
+    }
+    cout << "Filter has been applied." << endl;
+}
