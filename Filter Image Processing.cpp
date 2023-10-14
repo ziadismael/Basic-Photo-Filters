@@ -26,7 +26,8 @@ void filterMerge();
 void filterInvert(); 
 void filterDarkenLighten();
 void filterRotate();
-void filterCrop(); // <= added in this commit
+void filterCrop(); 
+void filterShrink(); //  <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -72,6 +73,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
             case '6':
                 filterRotate();
                 break;
+            case '9':
+              filterShrink();
+              break;
             case 'd':
                 filterCrop();
                 break;
@@ -302,5 +306,51 @@ void filterCrop(){
         }
     }
     cout<<"Filter has been applied."<<endl;
+}
+
+void filterShrink(){
+    unsigned char temp_image[SIZE][SIZE]; 
+    int x {}; // x is the scale that will allow us to controlo the loop behavior
+    for (size_t i = 0; i < SIZE; i++) // make the temp photo white
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            temp_image[i][j] = 255 ;
+        }   
+    }
+
+    string selector;
+    cout << "Choose an option to shrink with : " << endl << "1- 1/2" << endl << "2- 1/3" << endl << "3- 1/4" << endl;
+    while (true)// for handling input errors
+    {
+        cin >> selector;
+
+        if(selector == "1") x = 2;
+        else if(selector == "2") x = 3 ;
+        else if(selector == "3") x = 4;
+        else{
+            cout << "Invalid Input ! choose '1' for 1/2 , '2' for 1/3 or '3' for 1/4 : " ;
+            continue;// return the user back to enter the correct input 
+        }
+        
+        // main nested loops that shrunken the image by taking the average of X pixels and put it in one pixel the temp image
+        for (size_t i = 0; i < SIZE - 1; i += x) {
+            for (size_t j = 0; j < SIZE - 1; j += x) {
+                if( x == 4)
+                temp_image[i / x][j / x] = (image[i][j] + image[i][j + 1] + image[i + 1][j] + image[i + 1][j + 1]) / x;
+                else if (x == 3)
+                temp_image[i / x][j / x] = (image[i][j] + image[i][j + 1] + image[i + 1][j]) / x;
+                else if (x == 2)
+                temp_image[i / x][j / x] = (image[i][j] + image[i][j + 1] ) / x;
+            }
+        }
+        break; // get out of the while loop if the user enters valid input
+    }
+    //Uptading the original image to the Shrunken Image
+    for (size_t i = 0; i < SIZE ; i++) {
+        for (size_t j = 0; j < SIZE; j++) {
+            image[i][j] = temp_image[i][j];
+        }
+    }
 }
 
