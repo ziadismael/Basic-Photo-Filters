@@ -28,7 +28,8 @@ void filterDarkenLighten();
 void filterRotate();
 void filterCrop(); 
 void filterShrink();
-void filterMirror(); // <= added in this commit
+void filterMirror();
+void filterBlur(); // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -80,6 +81,8 @@ void menuSelect(){     //function responsible for handling the choice of the use
             case 'a':
                 filterMirror();
                 break;
+            case 'c' :
+                filterBlur();
             case 'd':
                 filterCrop();
                 break;
@@ -356,6 +359,7 @@ void filterShrink(){
             image[i][j] = temp_image[i][j];
         }
     }
+  cout << "Filter has been applied." << endl;
 }
 void filterMirror(){
     string selector;
@@ -409,6 +413,30 @@ void filterMirror(){
     for (size_t i = 0; i < SIZE ; i++) {
         for (size_t j = 0; j < SIZE; j++) {
             image[i][j] = image_mirrored[i][j];
+        }
+    }
+    cout << "Filter has been applied." << endl;
+}
+void filterBlur(){
+    unsigned char temp_image[SIZE][SIZE];
+
+    for (size_t i = 0; i < SIZE; i++)
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            // taking the average of the neighboring pixels to blur the image
+            temp_image[i][j] = (image[i - 1][j + 1] + image[i - 1][j - 1] + image[i - 1][j] +
+                                image[i][j - 1] + image[i + 1][j - 1] + image[i][j + 1] + 
+                                image [i + 1][j] + image[i + 1][j + 1] + image[i - 2][j + 2] +
+                                image[i - 2][j - 2] + image[i - 2][j] + image[i][j - 2] + 
+                                image[i + 2][j - 2] + image[i][j + 2] + image [i + 2][j] + 
+                                image[i + 2][j + 2]) / 16 ;
+        }
+    }
+    //Uptading the original image to the Blur Image
+    for (size_t i = 0; i < SIZE ; i++) {
+        for (size_t j = 0; j < SIZE; j++) {
+            image[i][j] = temp_image[i][j];
         }
     }
     cout << "Filter has been applied." << endl;
