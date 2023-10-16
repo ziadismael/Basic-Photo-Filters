@@ -30,7 +30,8 @@ void filterCrop();
 void filterShrink();
 void filterMirror();
 void filterBlur();
-void filterDetectEdges(); // <= added in this commit
+void filterDetectEdges(); 
+void filterSkewHorizontal(); // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -90,6 +91,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
             case 'd':
                 filterCrop();
                 break;
+            case 'e :
+              filterSkewHorizontal();
+              break;
             case 's':
                 saveImage();
                 break;
@@ -477,4 +481,56 @@ void filterDetectEdges(){
         }
     }
     cout<<"Filter has been applied."<<endl;
+}
+
+void filterSkewHorizontal(){ // filter reponsabile for skew image to the right
+    double angle {} , base {} , move{} , step{};
+
+    cout << "Please enter degree to skew right :  " ;
+    cin >> angle;
+
+    angle = angle*22 / 180 * 7 ; // changing the angle take from the user to radian instead of degree
+    base = (256 / (1 + (1/tan(angle)))); // the base of the new image so we can shrink it to fit the image
+    step = SIZE - base ;  // the place where we will start filling the new image after shrinking it
+    move = step / SIZE ; // the rate that we will move each i to make the photo skew correct
+
+    unsigned char temp_image [SIZE][SIZE] ;
+
+    for (size_t i = 0; i < SIZE ; i++) { // make the temp image white
+        for (size_t j = 0; j < SIZE; j++) {
+            temp_image[i][j] = 255;
+        }
+    }
+
+    for (size_t i = 0; i < SIZE; i++) // shrinking the image columns
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            temp_image[i][(j*(int)base) / SIZE] = image[i][j] ;       
+        }
+    }
+    
+    for (size_t i = 0; i < SIZE ; i++) {//updating the original image to the srhinked one
+        for (size_t j = 0; j < SIZE; j++) {
+            image[i][j] = temp_image[i][j];
+        }
+    }
+
+    for (size_t i = 0; i < SIZE; i++){ //skewing the image after shrinking
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            temp_image[i][j + (int) step] = image[i][j]; 
+        }
+        step-= move;
+        
+    }
+    
+    // updating the original image with the final image
+    for (size_t i = 0; i < SIZE ; i++) {
+        for (size_t j = 0; j < SIZE; j++) {
+            image[i][j] = temp_image[i][j];
+        }
+    }
+    cout << "Filter has been applied." << endl;
+    
 }
