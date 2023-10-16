@@ -31,7 +31,8 @@ void filterShrink();
 void filterMirror();
 void filterBlur();
 void filterDetectEdges(); 
-void filterSkewHorizontal(); // <= added in this commit
+void filterSkewHorizontal();
+void filterSkewVertical();// <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -94,6 +95,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
             case 'e :
               filterSkewHorizontal();
               break;
+            case 'f':
+                filterSkewVertical();
+                break;
             case 's':
                 saveImage();
                 break;
@@ -488,9 +492,17 @@ void filterSkewHorizontal(){ // filter reponsabile for skew image to the right
 
     cout << "Please enter degree to skew right :  " ;
     cin >> angle;
-
+    while (!(0 < angle < 90))
+    {
+        cout << "Please enter a valid degree to skew up in range 1 to 89 : " ;
+        cin >> angle;
+    }
+    
+    angle = 90 - angle ; // getting the complement of the angle
     angle = angle*22 / 180 * 7 ; // changing the angle take from the user to radian instead of degree
+
     base = (256 / (1 + (1/tan(angle)))); // the base of the new image so we can shrink it to fit the image
+    
     step = SIZE - base ;  // the place where we will start filling the new image after shrinking it
     move = step / SIZE ; // the rate that we will move each i to make the photo skew correct
 
@@ -534,3 +546,71 @@ void filterSkewHorizontal(){ // filter reponsabile for skew image to the right
     cout << "Filter has been applied." << endl;
     
 }
+
+void filterSkewVertical(){ // filter reponsabile for skew image to the up
+    double angle {} , base {} , move{} , step{};
+
+    cout << "Please enter degree to skew up :  " ;
+    cin >> angle;
+    while (!(0 < angle < 90))
+    {
+        cout << "Please enter a valid degree to skew up in range 1 to 89 : " ;
+        cin >> angle;
+    }
+    
+    angle = angle*22 / 180 * 7 ; // changing the angle take from the user to radian instead of degree
+
+    base = (256 / (1 + (1/tan(angle)))); // the base of the new image so we can shrink it to fit the image
+
+    step = SIZE - base ;  // the place where we will start filling the new image after shrinking it
+    move = step / SIZE ; // the rate that we will move each i to make the photo skew correct
+
+    unsigned char temp_image [SIZE][SIZE] ;
+
+    for (size_t i = 0; i < SIZE ; i++) { // make the temp image white
+        for (size_t j = 0; j < SIZE; j++) {
+            temp_image[i][j] = 255;
+        }
+    }
+
+    for (size_t i = 0; i < SIZE; i++) // shrinking the image columns
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            temp_image[(i*(int)base) / SIZE][j] = image[i][j] ;       
+        }
+    }
+    
+    for (size_t i = 0; i < SIZE ; i++) {//updating the original image to the srhinked one
+        for (size_t j = 0; j < SIZE; j++) {
+            image[i][j] = temp_image[i][j];
+        }
+    }
+    for (size_t i = 0; i < SIZE ; i++) { // make the temp image white
+        for (size_t j = 0; j < SIZE; j++) {
+            temp_image[i][j] = 255;
+        }
+    }
+    double orginalStep = step;
+    for (size_t i = 0; i < SIZE; i++){ //skewing the image after shrinking
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            if (i + (int) step > 256  || i + (int) step == 0) // to ensure not get out of array boundries
+            break;
+            
+            temp_image[i + (int) step][j] = image[i][j]; 
+            step-= move;
+        }
+        step = orginalStep;
+    }
+    
+    //updating the original image with the final image
+    for (size_t i = 0; i < SIZE ; i++) {
+        for (size_t j = 0; j < SIZE; j++) {
+            image[i][j] = temp_image[i][j];
+        }
+    }
+    cout << "Filter has been applied." << endl;
+    
+}
+
