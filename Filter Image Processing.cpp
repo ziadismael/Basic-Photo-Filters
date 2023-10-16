@@ -1,7 +1,7 @@
 /*
 FCAI – OOP Programming – 2023 - Assignment 1 
 Program: ImageFilterApplier.cpp
-Last Modification Date: 13/10/2023
+Last Modification Date: 16/10/2023
 Team Members:   1- Mohamed Mahmoud Khamis Rezk               (20221129)    mohamedkhamis20045@gmail.com
                 2- Ibrahem Medhat Mahmoud Mohamed El Zennary (20221003)    ibra.medhat@gmail.com
                 3- Ziad Sherif Ahmed Mohamed Ismael          (20220143)    ziad.ismael.studymail@gmail.com
@@ -29,7 +29,8 @@ void filterRotate();
 void filterCrop(); 
 void filterShrink();
 void filterMirror();
-void filterBlur(); // <= added in this commit
+void filterBlur();
+void filterDetectEdges(); // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -74,6 +75,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
                 break;
             case '6':
                 filterRotate();
+                break;
+            case '7':
+                filterDetectEdges();
                 break;
             case '9':
               filterShrink();
@@ -440,4 +444,37 @@ void filterBlur(){
         }
     }
     cout << "Filter has been applied." << endl;
+}
+void filterDetectEdges(){
+    // applying Black and White filter for easier detection and compare
+    for (size_t i=0; i<SIZE; i++){
+        for (size_t j=0; j<SIZE; j++){ 
+            if(image[i][j]<=127)
+                image[i][j] = 0;
+            else
+                image[i][j] = 255; 
+        }
+    }
+    // detecting edges
+    for(size_t i=0; i<SIZE; i++){
+        for (size_t j=1; j<SIZE-1; j++){
+            if(image[i][j-1] == 255){ 
+                if(image[i][j]==image[i][j+1]==0){
+                    image[i][j] = 0; //leaving two consecutive black pixels in a series of consecutive ones
+                    image[i][j+1] = 0;
+                }
+                else{
+                    image[i][j]=255; //whitening the others and leaving only border-like shape of a black object
+                }
+            }
+            else{
+                if(image[i][j]==0){
+                    if(image[i][j+1]==0){
+                        image[i][j+1]=255; //same but if the initial pixel is black not white
+                    }
+                }
+            }
+        }
+    }
+    cout<<"Filter has been applied."<<endl;
 }
