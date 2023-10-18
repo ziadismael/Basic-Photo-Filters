@@ -33,7 +33,8 @@ void filterBlur();
 void filterDetectEdges(); 
 void filterSkewHorizontal();
 void filterSkewVertical();
-void filterEnlarge();  // <= added in this commit
+void filterEnlarge();
+void filterShuffle();  // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -86,19 +87,23 @@ void menuSelect(){     //function responsible for handling the choice of the use
                 filterEnlarge();
                 break;
             case '9':
-              filterShrink();
-              break;
+                filterShrink();
+                break;
             case 'a':
                 filterMirror();
                 break;
+            case 'b':
+                filterShuffle();
+                break;
             case 'c' :
                 filterBlur();
+                break;
             case 'd':
                 filterCrop();
                 break;
             case 'e :
-              filterSkewHorizontal();
-              break;
+                filterSkewHorizontal();
+                break;
             case 'f':
                 filterSkewVertical();
                 break;
@@ -715,4 +720,116 @@ void filterEnlarge() {
         }
     }
 }
-
+void filterShuffle(){
+    unsigned char image_copy[SIZE][SIZE];
+    unsigned char quarter1[SIZE/2][SIZE/2];
+    unsigned char quarter2[SIZE/2][SIZE/2];
+    unsigned char quarter3[SIZE/2][SIZE/2];
+    unsigned char quarter4[SIZE/2][SIZE/2];
+ 
+    string selector, inpt;
+    for(size_t i=0; i<SIZE/2; i++){
+        for(size_t j=0; j<SIZE/2; j++){
+            quarter1[i][j] = image[i][j];
+        }
+    }
+    for(size_t i=0; i<SIZE/2; i++){
+        for(size_t j=(SIZE/2); j<SIZE; j++){
+            quarter2[i][j-128] = image[i][j];
+        }
+    }
+    for(size_t i=(SIZE/2); i<SIZE; i++){
+        for(size_t j=0; j<SIZE/2; j++){
+            quarter3[i-128][j] = image[i][j];
+        }
+    }
+    for(size_t i=(SIZE/2); i<SIZE; i++){
+        for(size_t j=(SIZE/2); j<SIZE; j++){
+            quarter4[i-128][j-128] = image[i][j];
+        }
+    }
+ 
+    cout<<"New order of quarters ? ";
+    cin>>selector;
+    // selector="";
+    // getline(cin, inpt);
+    // for (int i = 0; i<inpt.length(); i++)
+    //     if (inpt[i] != ' ')
+    //         selector = inpt[i];
+ 
+    //filling the first quarter specified by user
+    for (size_t i = 0; i < SIZE/2; i++){
+        for (size_t j = 0; j < SIZE/2; j++){
+            if (selector[0] == '1'){
+                image_copy[i][j] = quarter1[i][j];                
+            }
+            else if (selector[0]=='2'){
+                image_copy[i][j] = quarter2[i][j];
+            }
+            else if (selector[0]=='3'){
+                image_copy[i][j] = quarter3[i][j];
+            }
+            else if (selector[0]=='4'){
+                image_copy[i][j] = quarter4[i][j];
+            }
+        }
+    }
+    //filling the second quarter specified by user
+    for (size_t i = 0; i < SIZE/2; i++){
+        for (size_t j = (SIZE/2); j <SIZE ; j++){
+            if (selector[1] == '1'){
+                image_copy[i][j] = quarter1[i][j-128];                
+            }
+            else if (selector[1]=='2'){
+                image_copy[i][j] = quarter2[i][j-128];
+            }
+            else if (selector[1]=='3'){
+                image_copy[i][j] = quarter3[i][j-128];
+            }
+            else if (selector[1]=='4'){
+                image_copy[i][j] = quarter4[i][j-128];
+            }
+        }
+    }
+    //filling the third quarter specified by user
+    for (size_t i = (SIZE/2); i < SIZE; i++){
+        for (size_t j = 0; j <SIZE/2 ; j++){
+            if (selector[2] == '1'){
+                image_copy[i][j] = quarter1[i-128][j];                
+            }
+            else if (selector[2]=='2'){
+                image_copy[i][j] = quarter2[i-128][j];
+            }
+            else if (selector[2]=='3'){
+                image_copy[i][j] = quarter3[i-128][j];
+            }
+            else if (selector[2]=='4'){
+                image_copy[i][j] = quarter4[i-128][j];
+            }
+        }
+    }
+    //filling the fourth quarter specified by user
+    for (size_t i = (SIZE/2); i < SIZE; i++){
+        for (size_t j = (SIZE/2); j <SIZE ; j++){
+            if (selector[3] == '1'){
+                image_copy[i][j] = quarter1[i-128][j-128];                
+            }
+            else if (selector[3]=='2'){
+                image_copy[i][j] = quarter2[i-128][j-128];
+            }
+            else if (selector[3]=='3'){
+                image_copy[i][j] = quarter3[i-128][j-128];
+            }
+            else if (selector[3]=='4'){
+                image_copy[i][j] = quarter4[i-128][j-128];
+            }
+        }
+    }
+    for(size_t i=0; i<SIZE; i++){
+        for(size_t j=0; j<SIZE; j++){
+            image[i][j]=image_copy[i][j];
+        }
+    }
+    cout<<"Filter has been applied."<<endl;
+ 
+}
