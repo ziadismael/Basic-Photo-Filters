@@ -32,7 +32,8 @@ void filterMirror();
 void filterBlur();
 void filterDetectEdges(); 
 void filterSkewHorizontal();
-void filterSkewVertical();// <= added in this commit
+void filterSkewVertical();
+void filterEnlarge();  // <= added in this commit
 
 int main(){
     cout<<"Ahlan ya user ya habibi"<<endl;
@@ -80,6 +81,9 @@ void menuSelect(){     //function responsible for handling the choice of the use
                 break;
             case '7':
                 filterDetectEdges();
+                break;
+            case '8':
+                filterEnlarge();
                 break;
             case '9':
               filterShrink();
@@ -612,5 +616,103 @@ void filterSkewVertical(){ // filter reponsabile for skew image to the up
     }
     cout << "Filter has been applied." << endl;
     
+}
+void filterEnlarge() {
+    string selector;
+    cout << "Which quarter do you want to enlarge? (Enter '1' for the first quarter): ";
+    cin >> selector;
+ 
+    if (selector == "1") {
+        // Create a copy of the first quarter of the image
+        unsigned char quarterCopy[SIZE / 2][SIZE / 2];
+        for (size_t i = 0; i < SIZE / 2; i++) {
+            for (size_t j = 0; j < SIZE / 2; j++) {
+                quarterCopy[i][j] = image[i][j];
+            }
+        }
+ 
+        // Duplicate each pixel four times in the enlarged quarter
+        for (size_t i = 0; i < SIZE / 2; ++i) {
+            for (size_t j = 0; j < SIZE / 2; ++j) {
+                // Top-Left
+                image[i * 2][j * 2] = quarterCopy[i][j];
+                // Top-Right
+                image[i * 2][j * 2 + 1] = quarterCopy[i][j];
+                // Bottom-Left
+                image[i * 2 + 1][j * 2] = quarterCopy[i][j];
+                // Bottom-Right
+                image[i * 2 + 1][j * 2 + 1] = quarterCopy[i][j];
+            }
+        }
+ 
+    }
+    else if (selector == "2") {
+        // Create a copy of the second quarter of the image
+        unsigned char quarterCopy[SIZE / 2][SIZE / 2];
+        for (size_t i = 0; i < SIZE / 2; ++i) {
+            for (size_t j = (SIZE /2) -1 ; j < SIZE; ++j) {
+                quarterCopy[i][j-127] = image[i][j];
+            }
+        }
+ 
+        // Enlarge the copied quarter by duplicating each pixel four times
+        for (size_t i = 0 ; i < SIZE / 2; ++i) {
+            for (size_t j = 0; j < SIZE / 2; ++j) {
+                // Top-Left
+                image[i * 2][j * 2] = quarterCopy[i][j];
+                // Top-Right
+                image[i * 2][j * 2 + 1] = quarterCopy[i][j];
+                // Bottom-Left
+                image[i * 2 + 1][j * 2] = quarterCopy[i][j];
+                // Bottom-Right
+                image[i * 2 + 1][j * 2 + 1] = quarterCopy[i][j];
+            }
+        }
+    }
+    else if (selector == "3") {
+        // Create a copy of the 3rd quarter of the image
+        unsigned char quarterCopy[SIZE / 2][SIZE / 2];
+        for (size_t i = SIZE / 2; i < SIZE; ++i) {
+            for (size_t j = 0; j < SIZE / 2; ++j) {
+                quarterCopy[i - 128][j] = image[i][j];
+            }
+        }
+ 
+ 
+        // Duplicate each pixel four times in the enlarged quarter
+        for (size_t i = 0; i < SIZE / 2; ++i) {
+            for (size_t j = 0; j < SIZE / 2; ++j) {
+                // Top-Left
+                image[i * 2][j * 2] = quarterCopy[i][j];
+                // Top-Right
+                image[i * 2][j * 2 + 1] = quarterCopy[i][j];
+                // Bottom-Left
+                image[i * 2 + 1][j * 2] = quarterCopy[i][j];
+                // Bottom-Right
+                image[i * 2 + 1][j * 2 + 1] = quarterCopy[i][j];
+            }
+        }
+ 
+    }
+ 
+ 
+    else if (selector == "4") {
+        // Create a copy of the 4th quarter of the image
+        unsigned char quarterCopy[SIZE / 2][SIZE / 2];
+        for (size_t i = (SIZE / 2) ; i < SIZE; i++) {
+            for (size_t j = (SIZE / 2) ; j < SIZE; j++) {
+                quarterCopy[i - 128][j - 128] = image[i][j];
+            }
+        }
+        for (size_t i = 0; i< SIZE/2 ;i++){
+            for (size_t j=0 ; j<SIZE/2; j++){
+                image[i * 2][j * 2]=quarterCopy[i][j];
+                image[i * 2+1][j * 2+1]=quarterCopy[i][j];
+                image[i * 2][j * 2+1]=quarterCopy[i][j];
+                image[i * 2+1][j * 2]=quarterCopy[i][j];
+ 
+            }
+        }
+    }
 }
 
